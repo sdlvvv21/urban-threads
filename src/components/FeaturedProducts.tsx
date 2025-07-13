@@ -32,9 +32,7 @@ const containerVariants = {
     opacity: 1,
     transition: {
       staggerChildren: 0.2,
-      delayChildren: 0.2,
-      duration: 0.8,
-      ease: "easeInOut",
+      delayChildren: 0.2
     },
   },
 };
