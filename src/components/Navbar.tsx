@@ -1,7 +1,6 @@
 "use client";
 
 import { motion, useScroll, useTransform } from "framer-motion";
-import { useState, useEffect } from "react";
 
 export default function Navbar() {
   // Removed unused isScrolled state
