@@ -81,7 +81,7 @@ export default function FeaturedProducts() {
           viewport={{ once: true, margin: "-100px" }}
           className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8"
         >
-          {products.map((product, index) => (
+          {products.map((product) => (
             <motion.div 
               key={product.name} 
               variants={itemVariants}

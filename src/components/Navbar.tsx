@@ -4,7 +4,7 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import { useState, useEffect } from "react";
 
 export default function Navbar() {
-  const [isScrolled, setIsScrolled] = useState(false);
+  // Removed unused isScrolled state
   const { scrollY } = useScroll();
   
   const backgroundColor = useTransform(
@@ -13,14 +13,7 @@ export default function Navbar() {
     ["rgba(0, 0, 0, 0)", "rgba(0, 0, 0, 0.95)"]
   );
 
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  // Removed useEffect and handleScroll related to isScrolled
 
   return (
     <motion.nav
