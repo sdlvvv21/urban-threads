@@ -34,7 +34,7 @@ const containerVariants = {
       staggerChildren: 0.2,
       delayChildren: 0.2,
       duration: 0.8,
-      ease: [0.25, 0.46, 0.45, 0.94],
+      ease: "easeInOut",
     },
   },
 };
@@ -47,7 +47,7 @@ const itemVariants = {
     scale: 1,
     transition: {
       duration: 0.9,
-      ease: [0.25, 0.46, 0.45, 0.94],
+      ease: "easeInOut",
       type: "spring",
       stiffness: 80,
       damping: 25,
@@ -64,7 +64,7 @@ export default function FeaturedProducts() {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ 
             duration: 1.0, 
-            ease: [0.25, 0.46, 0.45, 0.94],
+            ease: "easeInOut",
             type: "spring",
             stiffness: 70,
             damping: 30
@@ -90,7 +90,7 @@ export default function FeaturedProducts() {
                 y: -8,
                 transition: { 
                   duration: 0.5, 
-                  ease: [0.25, 0.46, 0.45, 0.94],
+                  ease: "easeInOut",
                   type: "spring",
                   stiffness: 300,
                   damping: 25
