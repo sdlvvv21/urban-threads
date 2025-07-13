@@ -44,8 +44,6 @@ const itemVariants = {
     y: 0,
     scale: 1,
     transition: {
-      duration: 0.9,
-      ease: "easeInOut",
       type: "spring",
       stiffness: 80,
       damping: 25,
