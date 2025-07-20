@@ -35,7 +35,7 @@ export default function Contact() {
           transition={{ 
             duration: 1.0, 
             ease: [0.25, 0.46, 0.45, 0.94],
-            type: "spring",
+            type: "spring" as const,
             stiffness: 70,
             damping: 30
           }}
@@ -51,7 +51,7 @@ export default function Contact() {
             duration: 1.0, 
             delay: 0.3, 
             ease: [0.25, 0.46, 0.45, 0.94],
-            type: "spring",
+            type: "spring" as const,
             stiffness: 60,
             damping: 35
           }}
@@ -68,7 +68,7 @@ export default function Contact() {
             duration: 1.0, 
             delay: 0.5, 
             ease: [0.25, 0.46, 0.45, 0.94],
-            type: "spring",
+            type: "spring" as const,
             stiffness: 60,
             damping: 35
           }}
@@ -87,7 +87,7 @@ export default function Contact() {
                 duration: 0.6, 
                 delay: 0.7 + index * 0.15,
                 ease: [0.25, 0.46, 0.45, 0.94],
-                type: "spring",
+                type: "spring" as const,
                 stiffness: 200,
                 damping: 20
               }}
@@ -98,7 +98,7 @@ export default function Contact() {
                 transition: { 
                   duration: 0.4, 
                   ease: [0.25, 0.46, 0.45, 0.94],
-                  type: "spring",
+                  type: "spring" as const,
                   stiffness: 300,
                   damping: 25
                 }

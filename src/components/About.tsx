@@ -12,7 +12,7 @@ export default function About() {
           transition={{ 
             duration: 1.0, 
             ease: [0.25, 0.46, 0.45, 0.94],
-            type: "spring",
+            type: "spring" as const,
             stiffness: 70,
             damping: 30
           }}
@@ -28,7 +28,7 @@ export default function About() {
             duration: 1.0, 
             delay: 0.3, 
             ease: [0.25, 0.46, 0.45, 0.94],
-            type: "spring",
+            type: "spring" as const,
             stiffness: 60,
             damping: 35
           }}

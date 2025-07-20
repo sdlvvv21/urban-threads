@@ -27,7 +27,7 @@ export default function Hero() {
       transition={{ 
         duration: 0.8, 
         ease: [0.25, 0.46, 0.45, 0.94],
-        type: "spring",
+        type: "spring" as const,
         stiffness: 60,
         damping: 30
       }}
@@ -47,7 +47,7 @@ export default function Hero() {
           transition={{ 
             duration: 1.2, 
             ease: [0.25, 0.46, 0.45, 0.94],
-            type: "spring",
+            type: "spring" as const,
             stiffness: 100,
             damping: 20
           }}
@@ -62,7 +62,7 @@ export default function Hero() {
             duration: 1.0, 
             delay: 0.4, 
             ease: [0.25, 0.46, 0.45, 0.94],
-            type: "spring",
+            type: "spring" as const,
             stiffness: 80,
             damping: 25
           }}
@@ -79,7 +79,7 @@ export default function Hero() {
             duration: 1.0, 
             delay: 0.8, 
             ease: [0.25, 0.46, 0.45, 0.94],
-            type: "spring",
+            type: "spring" as const,
             stiffness: 120,
             damping: 18
           }}

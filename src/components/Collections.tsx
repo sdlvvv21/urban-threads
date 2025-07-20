@@ -31,7 +31,7 @@ export default function Collections() {
           transition={{ 
             duration: 1.0, 
             ease: [0.25, 0.46, 0.45, 0.94],
-            type: "spring",
+            type: "spring" as const,
             stiffness: 70,
             damping: 30
           }}
@@ -51,7 +51,7 @@ export default function Collections() {
                 duration: 0.9, 
                 delay: index * 0.25,
                 ease: [0.25, 0.46, 0.45, 0.94],
-                type: "spring",
+                type: "spring" as const,
                 stiffness: 80,
                 damping: 25
               }}
@@ -61,7 +61,7 @@ export default function Collections() {
                 transition: { 
                   duration: 0.5, 
                   ease: [0.25, 0.46, 0.45, 0.94],
-                  type: "spring",
+                  type: "spring" as const,
                   stiffness: 300,
                   damping: 25
                 }
@@ -84,7 +84,7 @@ export default function Collections() {
                   transition={{ 
                     duration: 0.4, 
                     ease: [0.25, 0.46, 0.45, 0.94],
-                    type: "spring",
+                    type: "spring" as const,
                     stiffness: 200,
                     damping: 20
                   }}

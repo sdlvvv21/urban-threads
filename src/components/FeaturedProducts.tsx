@@ -1,32 +1,37 @@
 "use client";
 
+import Image from "next/image";
+import { motion, Variants } from "framer-motion";
+import { useCart } from "../contexts/CartContext";
+
 const products = [
   {
+    id: "hoodie-1",
     name: "Minimalist Hoodie",
-    price: "$80",
+    price: 80,
     image: "/product-hoodie.jpg",
   },
   {
+    id: "tee-1",
     name: "Urban Tee",
-    price: "$40",
+    price: 40,
     image: "/product-tee.jpg",
   },
   {
+    id: "joggers-1",
     name: "Essential Joggers",
-    price: "$70",
+    price: 70,
     image: "/product-joggers.jpg",
   },
   {
+    id: "cap-1",
     name: "Street Cap",
-    price: "$30",
+    price: 30,
     image: "/product-cap.jpg",
   },
 ];
 
-import Image from "next/image";
-import { motion } from "framer-motion";
-
-const containerVariants = {
+const containerVariants: Variants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
@@ -37,14 +42,14 @@ const containerVariants = {
   },
 };
 
-const itemVariants = {
+const itemVariants: Variants = {
   hidden: { opacity: 0, y: 50, scale: 0.9 },
   visible: {
     opacity: 1,
     y: 0,
     scale: 1,
     transition: {
-      type: "spring",
+      type: "spring" as const,
       stiffness: 80,
       damping: 25,
     },
@@ -52,6 +57,18 @@ const itemVariants = {
 };
 
 export default function FeaturedProducts() {
+  const { addItem } = useCart();
+
+  const handleAddToCart = (product: typeof products[0]) => {
+    addItem({
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      image: product.image,
+      quantity: 1,
+    });
+  };
+
   return (
     <section id="featured" className="py-20 bg-white text-black">
       <div className="max-w-6xl mx-auto px-4">
@@ -61,7 +78,7 @@ export default function FeaturedProducts() {
           transition={{ 
             duration: 1.0, 
             ease: "easeInOut",
-            type: "spring",
+            type: "spring" as const,
             stiffness: 70,
             damping: 30
           }}
@@ -87,7 +104,7 @@ export default function FeaturedProducts() {
                 transition: { 
                   duration: 0.5, 
                   ease: "easeInOut",
-                  type: "spring",
+                  type: "spring" as const,
                   stiffness: 300,
                   damping: 25
                 }
@@ -105,7 +122,13 @@ export default function FeaturedProducts() {
               </div>
               <div className="p-4 flex flex-col items-center">
                 <h3 className="font-semibold text-lg mb-2">{product.name}</h3>
-                <span className="text-gray-600 font-bold">{product.price}</span>
+                <span className="text-gray-600 font-bold mb-3">${product.price}</span>
+                <button
+                  onClick={() => handleAddToCart(product)}
+                  className="w-full bg-black text-white py-2 px-4 rounded-md hover:bg-gray-800 transition-colors duration-200 font-medium"
+                >
+                  Add to Cart
+                </button>
               </div>
             </motion.div>
           ))}
