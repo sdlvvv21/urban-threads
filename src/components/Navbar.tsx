@@ -32,7 +32,7 @@ export default function Navbar() {
           }}
           className="text-white font-bold text-xl uppercase tracking-wider"
         >
-          Urban Threads
+          SCARF
         </motion.div>
         
         <motion.div
