@@ -33,7 +33,7 @@ export default function Hero() {
       }}
     >
       <Image
-        src="/scarf.jpg"
+        src="/scarfsilk.jpg"
         alt="Urban Threads Hero"
         layout="fill"
         objectFit="cover"
