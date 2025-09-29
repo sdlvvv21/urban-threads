@@ -1,168 +1,167 @@
 "use client";
 
-import { useState } from "react";
-import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
-import { useAuth } from "../contexts/AuthContext";
-import { useCart } from "../contexts/CartContext";
-import LoginModal from "./LoginModal";
-import CartSidebar from "./CartSidebar";
+import { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useAuth } from '../contexts/AuthContext';
 
-export default function Navbar() {
-  const { scrollY } = useScroll();
-  const { user, isAuthenticated, logout } = useAuth();
-  const { state: cartState, toggleCart, getTotalItems } = useCart();
-  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+interface LoginModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  initialMode?: 'login' | 'signup';
+}
+
+export default function LoginModal({ isOpen, onClose, initialMode = 'login' }: LoginModalProps) {
+  const [mode, setMode] = useState<'login' | 'signup'>(initialMode);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [name, setName] = useState('');
+  const [error, setError] = useState('');
   
-  const backgroundColor = useTransform(
-    scrollY,
-    [0, 100],
-    ["rgba(0, 0, 0, 0)", "rgba(0, 0, 0, 0.95)"]
-  );
+  const { login, signup, isLoading } = useAuth();
 
-  const handleAuthClick = () => {
-    if (isAuthenticated) {
-      logout();
-    } else {
-      setIsLoginModalOpen(true);
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError('');
+
+    try {
+      let success = false;
+      
+      if (mode === 'login') {
+        success = await login(email, password);
+      } else {
+        success = await signup(email, password, name);
+      }
+
+      if (success) {
+        onClose();
+        setEmail('');
+        setPassword('');
+        setName('');
+      } else {
+        setError(mode === 'login' ? 'Invalid credentials' : 'Signup failed');
+      }
+    } catch {
+      setError('An error occurred. Please try again.');
     }
   };
 
-  const toggleMobileMenu = () => {
-    setIsMobileMenuOpen(!isMobileMenuOpen);
+  const switchMode = () => {
+    setMode(mode === 'login' ? 'signup' : 'login');
+    setError('');
   };
 
   return (
-    <>
-      <motion.nav
-        style={{ backgroundColor }}
-        className="fixed top-0 left-0 right-0 z-50 px-6 py-4 transition-all duration-300"
-      >
-        <div className="max-w-6xl mx-auto flex items-center justify-between">
+    <AnimatePresence>
+      {isOpen && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4"
+          onClick={onClose}
+        >
           <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ 
-              duration: 1.0, 
-              ease: [0.25, 0.46, 0.45, 0.94],
-              type: "spring" as const,
-              stiffness: 100,
-              damping: 25
-            }}
-            className="text-white font-bold text-xl uppercase tracking-wider"
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0.9, opacity: 0 }}
+            className="bg-white rounded-lg shadow-xl max-w-md w-full p-6"
+            onClick={(e) => e.stopPropagation()}
           >
-            Urban Threads
-          </motion.div>
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-2xl font-bold text-gray-900">
+                {mode === 'login' ? 'Sign In' : 'Create Account'}
+              </h2>
+              <button
+                onClick={onClose}
+                className="text-gray-400 hover:text-gray-600 transition-colors"
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
 
-          {/* Mobile menu button */}
-          <button
-            onClick={toggleMobileMenu}
-            className="md:hidden text-white hover:text-gray-300 transition-colors"
-          >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
-          </button>
-          
-          <motion.div
-            initial={{ opacity: 0, x: 30 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ 
-              duration: 1.0, 
-              delay: 0.3, 
-              ease: [0.25, 0.46, 0.45, 0.94],
-              type: "spring" as const,
-              stiffness: 100,
-              damping: 25
-            }}
-            className="hidden md:flex items-center space-x-8"
-          >
-            <a href="#" className="text-white hover:text-gray-300 transition-colors duration-500 ease-[0.25,0.46,0.45,0.94] font-medium">Home</a>
-            <a href="#featured" className="text-white hover:text-gray-300 transition-colors duration-500 ease-[0.25,0.46,0.45,0.94] font-medium">Shop</a>
-            <a href="#collections" className="text-white hover:text-gray-300 transition-colors duration-500 ease-[0.25,0.46,0.45,0.94] font-medium">Collections</a>
-            <a href="#about" className="text-white hover:text-gray-300 transition-colors duration-500 ease-[0.25,0.46,0.45,0.94] font-medium">About</a>
-            <a href="#contact" className="text-white hover:text-gray-300 transition-colors duration-500 ease-[0.25,0.46,0.45,0.94] font-medium">Contact</a>
-            
-            {/* Auth Button */}
-            <button
-              onClick={handleAuthClick}
-              className="text-white hover:text-gray-300 transition-colors duration-500 ease-[0.25,0.46,0.45,0.94] font-medium"
-            >
-              {isAuthenticated ? `Hi, ${user?.name}` : 'Sign In'}
-            </button>
-            
-            {/* Cart Button */}
-            <button
-              onClick={toggleCart}
-              className="relative text-white hover:text-gray-300 transition-colors duration-500 ease-[0.25,0.46,0.45,0.94]"
-            >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-              </svg>
-              {getTotalItems() > 0 && (
-                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                  {getTotalItems()}
-                </span>
-              )}
-            </button>
-          </motion.div>
-        </div>
-
-        {/* Mobile Menu */}
-        <AnimatePresence>
-          {isMobileMenuOpen && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: 'auto' }}
-              exit={{ opacity: 0, height: 0 }}
-              className="md:hidden bg-black bg-opacity-95"
-            >
-              <div className="px-6 py-4 space-y-4">
-                <a href="#" className="block text-white hover:text-gray-300 transition-colors font-medium">Home</a>
-                <a href="#featured" className="block text-white hover:text-gray-300 transition-colors font-medium">Shop</a>
-                <a href="#collections" className="block text-white hover:text-gray-300 transition-colors font-medium">Collections</a>
-                <a href="#about" className="block text-white hover:text-gray-300 transition-colors font-medium">About</a>
-                <a href="#contact" className="block text-white hover:text-gray-300 transition-colors font-medium">Contact</a>
-                
-                <div className="flex items-center justify-between pt-4 border-t border-gray-700">
-                  <button
-                    onClick={handleAuthClick}
-                    className="text-white hover:text-gray-300 transition-colors font-medium"
-                  >
-                    {isAuthenticated ? `Hi, ${user?.name}` : 'Sign In'}
-                  </button>
-                  
-                  <button
-                    onClick={toggleCart}
-                    className="relative text-white hover:text-gray-300 transition-colors"
-                  >
-                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-                    </svg>
-                    {getTotalItems() > 0 && (
-                      <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                        {getTotalItems()}
-                      </span>
-                    )}
-                  </button>
+            <form onSubmit={handleSubmit} className="space-y-4">
+              {mode === 'signup' && (
+                <div>
+                  <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
+                    Full Name
+                  </label>
+                  <input
+                    type="text"
+                    id="name"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent"
+                    required={mode === 'signup'}
+                  />
                 </div>
+              )}
+
+              <div>
+                <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+                  Email
+                </label>
+                <input
+                  type="email"
+                  id="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent"
+                  required
+                />
               </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </motion.nav>
 
-      {/* Login Modal */}
-      <LoginModal
-        isOpen={isLoginModalOpen}
-        onClose={() => setIsLoginModalOpen(false)}
-      />
+              <div>
+                <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
+                  Password
+                </label>
+                <input
+                  type="password"
+                  id="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent"
+                  required
+                />
+              </div>
 
-      {/* Cart Sidebar */}
-      <CartSidebar
-        isOpen={cartState.isOpen}
-        onClose={() => toggleCart()}
-      />
-    </>
+              {error && (
+                <div className="text-red-600 text-sm bg-red-50 p-3 rounded-md">
+                  {error}
+                </div>
+              )}
+
+              <button
+                type="submit"
+                disabled={isLoading}
+                className="w-full bg-black text-white py-2 px-4 rounded-md hover:bg-gray-800 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {isLoading ? (
+                  <div className="flex items-center justify-center">
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                    {mode === 'login' ? 'Signing In...' : 'Creating Account...'}
+                  </div>
+                ) : (
+                  mode === 'login' ? 'Sign In' : 'Create Account'
+                )}
+              </button>
+            </form>
+
+            <div className="mt-6 text-center">
+              <p className="text-gray-600">
+                {mode === 'login' ? "Don't have an account?" : 'Already have an account?'}
+                <button
+                  onClick={switchMode}
+                  className="ml-1 text-black font-medium hover:underline"
+                >
+                  {mode === 'login' ? 'Sign up' : 'Sign in'}
+                </button>
+              </p>
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
-} 
+}
