@@ -33,7 +33,7 @@ export default function Hero() {
       }}
     >
       <Image
-        src="/hero-placeholder.jpg"
+        src="/scarfsilk.jpg"
         alt="Urban Threads Hero"
         layout="fill"
         objectFit="cover"
@@ -53,7 +53,7 @@ export default function Hero() {
           }}
           className="text-5xl md:text-7xl font-extrabold tracking-tight mb-4 uppercase"
         >
-          Urban Threads
+          Scarf
         </motion.h1>
         <motion.p 
           initial={{ opacity: 0, y: 30 }}
