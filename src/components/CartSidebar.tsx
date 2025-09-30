@@ -1,6 +1,7 @@
 "use client";
 
 import { motion, AnimatePresence } from 'framer-motion';
+import Image from 'next/image';
 import { useCart } from '../contexts/CartContext';
 
 interface CartSidebarProps {
@@ -73,9 +74,11 @@ export default function CartSidebar({ isOpen, onClose }: CartSidebarProps) {
                       exit={{ opacity: 0, y: -20 }}
                       className="flex items-center space-x-4 p-4 border border-gray-200 rounded-lg"
                     >
-                      <img
+                      <Image
                         src={item.image}
                         alt={item.name}
+                        width={64}
+                        height={64}
                         className="w-16 h-16 object-cover rounded-md"
                       />
                       <div className="flex-1">

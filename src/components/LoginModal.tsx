@@ -40,7 +40,7 @@ export default function LoginModal({ isOpen, onClose, initialMode = 'login' }: L
       } else {
         setError(mode === 'login' ? 'Invalid credentials' : 'Signup failed');
       }
-    } catch (error) {
+    } catch {
       setError('An error occurred. Please try again.');
     }
   };
