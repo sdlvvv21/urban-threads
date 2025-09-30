@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 
 export interface User {
   id: string;
@@ -35,23 +35,44 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
+  // Hydrate user from localStorage on mount
+  useEffect(() => {
+    try {
+      const stored = typeof window !== 'undefined' ? window.localStorage.getItem('auth_user') : null;
+      if (stored) {
+        const parsed: User = JSON.parse(stored);
+        setUser(parsed);
+      }
+    } catch (error) {
+      console.error('Failed to parse stored user', error);
+    }
+  }, []);
+
+  // Persist user to localStorage when it changes
+  useEffect(() => {
+    try {
+      if (typeof window === 'undefined') return;
+      if (user) {
+        window.localStorage.setItem('auth_user', JSON.stringify(user));
+      } else {
+        window.localStorage.removeItem('auth_user');
+      }
+    } catch (error) {
+      console.error('Failed to persist user', error);
+    }
+  }, [user]);
+
   const login = async (email: string, password: string): Promise<boolean> => {
     setIsLoading(true);
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // For demo purposes, accept any email/password combination
-      if (email && password) {
-        const mockUser: User = {
-          id: '1',
-          email,
-          name: email.split('@')[0],
-        };
-        setUser(mockUser);
-        return true;
-      }
-      return false;
+      if (!email || !password) return false;
+      const mockUser: User = {
+        id: 'local-1',
+        email,
+        name: email.split('@')[0] || 'User',
+      };
+      setUser(mockUser);
+      return true;
     } catch (error) {
       console.error('Login error:', error);
       return false;
@@ -63,20 +84,14 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const signup = async (email: string, password: string, name: string): Promise<boolean> => {
     setIsLoading(true);
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // For demo purposes, accept any valid signup
-      if (email && password && name) {
-        const mockUser: User = {
-          id: '1',
-          email,
-          name,
-        };
-        setUser(mockUser);
-        return true;
-      }
-      return false;
+      if (!email || !password || !name) return false;
+      const mockUser: User = {
+        id: 'local-1',
+        email,
+        name,
+      };
+      setUser(mockUser);
+      return true;
     } catch (error) {
       console.error('Signup error:', error);
       return false;

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useReducer, ReactNode } from 'react';
+import React, { createContext, useContext, useReducer, ReactNode, useEffect } from 'react';
 
 export interface CartItem {
   id: string;
@@ -111,6 +111,36 @@ interface CartProviderProps {
 
 export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
   const [state, dispatch] = useReducer(cartReducer, initialState);
+
+  // Hydrate cart from localStorage on mount
+  useEffect(() => {
+    try {
+      if (typeof window === 'undefined') return;
+      const stored = window.localStorage.getItem('cart_state');
+      if (stored) {
+        const parsed: CartState = JSON.parse(stored);
+        if (parsed && Array.isArray(parsed.items)) {
+          // Replace state by dispatching actions
+          parsed.items.forEach(item => {
+            dispatch({ type: 'ADD_ITEM', payload: item });
+          });
+        }
+      }
+    } catch (error) {
+      console.error('Failed to hydrate cart', error);
+    }
+  }, []);
+
+  // Persist cart to localStorage when items change
+  useEffect(() => {
+    try {
+      if (typeof window === 'undefined') return;
+      const toStore: CartState = { items: state.items, isOpen: false };
+      window.localStorage.setItem('cart_state', JSON.stringify(toStore));
+    } catch (error) {
+      console.error('Failed to persist cart', error);
+    }
+  }, [state.items]);
 
   const addItem = (item: CartItem) => {
     dispatch({ type: 'ADD_ITEM', payload: item });
